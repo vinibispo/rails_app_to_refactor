@@ -47,12 +47,20 @@ class TodosController < ApplicationController
   end
 
   def update
-    @todo.update(todo_params)
+    conditions = {
+      id: params[:id],
+      user_id: current_user.id
+    }
 
-    if @todo.valid?
-      render_json(200, todo: @todo.serialize_as_json)
-    else
-      render_json(422, todo: @todo.errors.as_json)
+    attributes = {
+      title: todo_params[:title]
+    }
+    status, todo = UpdateTodoService.new.call(conditions:, attributes:)
+
+    case [status, todo]
+    in [:ok, _] then render_json(200, todo: @todo.serialize_as_json)
+    in [:not_found] then render_json(404, todo: { id: 'not found' })
+    else render_json(422, todo: todo.errors.as_json)
     end
   end
 
