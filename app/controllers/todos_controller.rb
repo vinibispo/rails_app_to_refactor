@@ -3,10 +3,13 @@
 class TodosController < ApplicationController
   before_action :authenticate_user
 
-  def index
-    json = TodoFilterItemsService.new.call(user_id: current_user.id, status: params[:status]&.strip&.downcase)
+  BuildItem = ->(item) { TodoSerializer.new(item).as_json }
+  private_constant :BuildItem
 
-    render_json(200, todos: json)
+  def index
+    todos = TodoFilterItemsService.new.call(user_id: current_user.id, status: params[:status]&.strip&.downcase)
+
+    render_json(200, todos: todos.map(&BuildItem))
   end
 
   def create
@@ -18,15 +21,15 @@ class TodosController < ApplicationController
     status, todo = CreateTodoService.new.call(todo_attributes:)
 
     case [status, todo]
-    in [:ok, _] then render_json(201, todo: todo.serialize_as_json)
-    in [:error, _] then render_json(422, todo: todo.errors.as_json)
+    in [:ok, _] then render_json(201, todo: BuildItem[todo])
+    in [:error, _] then render_json(422, todo: BuildItem[todo])
     end
   end
 
   def show
     status, todo = FindTodoService.new.call(user_id: current_user.id, id: params[:id])
     case [status, todo]
-    in [:ok, _] then render_json(200, todo: todo.serialize_as_json)
+    in [:ok, _] then render_json(200, todo: BuildItem[todo])
     else render_json(404, todo: { id: 'not found' })
     end
   end
@@ -35,7 +38,7 @@ class TodosController < ApplicationController
     status, todo = DeleteTodoService.new.call(user_id: current_user.id, id: params[:id])
 
     case [status, todo]
-    in [:ok, _] then render_json(200, todo: todo.serialize_as_json)
+    in [:ok, _] then render_json(200, todo: BuildItem[todo])
     else render_json(404, todo: { id: 'not found' })
     end
   end
@@ -52,9 +55,9 @@ class TodosController < ApplicationController
     status, todo = UpdateTodoService.new.call(conditions:, attributes:)
 
     case [status, todo]
-    in [:ok, _] then render_json(200, todo: @todo.serialize_as_json)
-    in [:not_found] then render_json(404, todo: { id: 'not found' })
-    else render_json(422, todo: todo.errors.as_json)
+    in [:ok, _] then render_json(200, todo: BuildItem[todo])
+    in [:not_found, _] then render_json(404, todo: { id: 'not found' })
+    else render_json(422, todo: BuildItem[todo])
     end
   end
 
@@ -66,7 +69,7 @@ class TodosController < ApplicationController
 
     status, todo = CompleteTodoService.new.call(conditions:)
     case status
-    in :ok then render_json(200, todo: todo.serialize_as_json)
+    in :ok then render_json(200, todo: BuildItem[todo])
     else render_json(404, todo: { id: 'not found' })
     end
   end
@@ -79,14 +82,14 @@ class TodosController < ApplicationController
 
     status, todo = UncompleteTodoService.new.call(conditions:)
     case status
-    in :ok then render_json(200, todo: todo.serialize_as_json)
+    in :ok then render_json(200, todo: BuildItem[todo])
     else render_json(404, todo: { id: 'not found' })
     end
   end
 
   private
 
-    def todo_params
-      params.require(:todo).permit(:title, :due_at)
-    end
+  def todo_params
+    params.require(:todo).permit(:title, :due_at)
+  end
 end

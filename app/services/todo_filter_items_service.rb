@@ -7,6 +7,6 @@ class TodoFilterItemsService
             else Todo.all
             end
 
-    todos.where(user_id:).map(&:serialize_as_json)
+    todos.where(user_id:)
   end
 end
