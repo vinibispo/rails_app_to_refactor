@@ -21,8 +21,8 @@ class RegisterUserService
       password_digest:
     )
 
-    return [:ok, user.as_json(only: %i[id name token])] if user.save
+    return [:ok, user] if user.save
 
-    [:error, user.errors.as_json]
+    [:error, user]
   end
 end

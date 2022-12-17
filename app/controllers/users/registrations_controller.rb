@@ -7,13 +7,15 @@ class Users::RegistrationsController < ApplicationController
     user_attributes = { name: user_params[:name], email: user_params[:email], password: user_params[:password],
                         password_confirmation: user_params[:password_confirmation] }
 
-    status, json = RegisterUserService.new.call(user_attributes:)
+    status, user = RegisterUserService.new.call(user_attributes:)
 
-    case [status, json]
-    in [:password_err, _] | [:confirmation_err, _] | [:error, _]
-      render_json(422, user: json)
-    in [:ok, _]
-      render_json(201, user: json)
+    case [status, user]
+    in [:password_err, _] | [:confirmation_err, _] 
+      render_json(422, user:)
+    in [:error, User]
+      render_json(422, user: UserSerializer.new(user).as_json)
+    in [:ok, User]
+      render_json(201, user: UserSerializer.new(user).as_json)
     end
   end
 end
