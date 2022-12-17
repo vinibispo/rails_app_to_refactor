@@ -7,7 +7,7 @@ class TodosController < ApplicationController
   private_constant :BuildItem
 
   def index
-    todos = Todo::FilterItemsService.new.call(user_id: current_user.id, status: params[:status]&.strip&.downcase)
+    todos = ::Todo::FilterItemsService.new.call(user_id: current_user.id, status: params[:status]&.strip&.downcase)
 
     render_json(200, todos: todos.map(&BuildItem))
   end
@@ -18,7 +18,7 @@ class TodosController < ApplicationController
       title: todo_params[:title],
       due_at: todo_params[:due_at]
     }
-    status, todo = Todo::CreateService.new.call(todo_attributes:)
+    status, todo = ::Todo::CreateService.new.call(todo_attributes:)
 
     case [status, todo]
     in [:ok, _] then render_json(201, todo: BuildItem[todo])
@@ -27,7 +27,7 @@ class TodosController < ApplicationController
   end
 
   def show
-    status, todo = Todo::FindService.new.call(user_id: current_user.id, id: params[:id])
+    status, todo = ::Todo::FindService.new.call(user_id: current_user.id, id: params[:id])
     case [status, todo]
     in [:ok, _] then render_json(200, todo: BuildItem[todo])
     else render_json(404, todo: { id: 'not found' })
@@ -35,7 +35,7 @@ class TodosController < ApplicationController
   end
 
   def destroy
-    status, todo = Todo::DeleteService.new.call(user_id: current_user.id, id: params[:id])
+    status, todo = ::Todo::DeleteService.new.call(user_id: current_user.id, id: params[:id])
 
     case [status, todo]
     in [:ok, _] then render_json(200, todo: BuildItem[todo])
@@ -52,7 +52,7 @@ class TodosController < ApplicationController
     attributes = {
       title: todo_params[:title]
     }
-    status, todo = Todo::UpdateService.new.call(conditions:, attributes:)
+    status, todo = ::Todo::UpdateService.new.call(conditions:, attributes:)
 
     case [status, todo]
     in [:ok, _] then render_json(200, todo: BuildItem[todo])
@@ -80,7 +80,7 @@ class TodosController < ApplicationController
       user_id: current_user.id
     }
 
-    status, todo = Todo::UncompleteService.new.call(conditions:)
+    status, todo = ::Todo::UncompleteService.new.call(conditions:)
     case status
     in :ok then render_json(200, todo: BuildItem[todo])
     else render_json(404, todo: { id: 'not found' })
