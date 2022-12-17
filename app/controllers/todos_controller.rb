@@ -30,7 +30,11 @@ class TodosController < ApplicationController
   end
 
   def show
-    render_json(200, todo: @todo.serialize_as_json)
+    status, todo = FindTodoService.new.call(user_id: current_user.id, id: params[:id])
+    case [status, todo]
+    in [:ok, _] then render_json(200, todo: todo.serialize_as_json)
+    else render_json(404, todo: { id: 'not found' })
+    end
   end
 
   def destroy
