@@ -3,12 +3,6 @@
 class TodosController < ApplicationController
   before_action :authenticate_user
 
-  before_action :set_todo, only: %i[show destroy update complete uncomplete]
-
-  rescue_from ActiveRecord::RecordNotFound do
-    render_json(404, todo: { id: 'not found' })
-  end
-
   def index
     json = TodoFilterItemsService.new.call(user_id: current_user.id, status: params[:status]&.strip&.downcase)
 
@@ -94,9 +88,5 @@ class TodosController < ApplicationController
 
     def todo_params
       params.require(:todo).permit(:title, :due_at)
-    end
-
-    def set_todo
-      @todo = current_user.todos.find(params[:id])
     end
 end
