@@ -1,4 +1,4 @@
-class UserSerializer
+class User::Serializer
   private attr_accessor :user
   def initialize(user)
     self.user = user

@@ -18,5 +18,5 @@ class Users::RegistrationsController < ApplicationController
 
   private
 
-  def user_serializer(user) = UserSerializer.new(user).as_json
+  def user_serializer(user) = ::User::Serializer.new(user).as_json
 end
