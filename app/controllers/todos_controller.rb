@@ -38,9 +38,12 @@ class TodosController < ApplicationController
   end
 
   def destroy
-    @todo.destroy
+    status, todo = DeleteTodoService.new.call(user_id: current_user.id, id: params[:id])
 
-    render_json(200, todo: @todo.serialize_as_json)
+    case [status, todo]
+    in [:ok, _] then render_json(200, todo: todo.serialize_as_json)
+    else render_json(404, todo: { id: 'not found' })
+    end
   end
 
   def update
