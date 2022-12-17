@@ -10,12 +10,12 @@ class Users::RegistrationsController < ApplicationController
     status, user = RegisterUserService.new.call(user_attributes:)
 
     case [status, user]
-    in [:password_err, _] | [:confirmation_err, _] 
-      render_json(422, user:)
-    in [:error, User]
-      render_json(422, user: UserSerializer.new(user).as_json)
-    in [:ok, User]
-      render_json(201, user: UserSerializer.new(user).as_json)
+    in [:password_err, _] | [:confirmation_err, _] then render_json(422, user:)
+    in [:error, User] then render_json(422, user: user_serializer(user))
+    in [:ok, User] then render_json(201, user: user_serializer(user))
     end
   end
+
+  private
+  def user_serializer(user) = UserSerializer.new(user).as_json
 end
