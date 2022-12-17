@@ -24,12 +24,16 @@ class TodosController < ApplicationController
   end
 
   def create
-    todo = current_user.todos.create(todo_params)
+    todo_attributes = {
+      user_id: current_user.id,
+      title: todo_params[:title],
+      due_at: todo_params[:due_at]
+    }
+    status, todo = CreateTodoService.new.call(todo_attributes:)
 
-    if todo.valid?
-      render_json(201, todo: todo.serialize_as_json)
-    else
-      render_json(422, todo: todo.errors.as_json)
+    case [status, todo]
+    in [:ok, _] then render_json(201, todo: todo.serialize_as_json)
+    in [:error, _] then render_json(422, todo: todo.errors.as_json)
     end
   end
 
