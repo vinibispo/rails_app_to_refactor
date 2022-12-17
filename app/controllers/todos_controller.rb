@@ -65,9 +65,16 @@ class TodosController < ApplicationController
   end
 
   def complete
-    @todo.complete!
+    conditions = {
+      id: params[:id],
+      user_id: current_user.id
+    }
 
-    render_json(200, todo: @todo.serialize_as_json)
+    status, todo = CompleteTodoService.new.call(conditions:)
+    case status
+    in :ok then render_json(200, todo: todo.serialize_as_json)
+    else render_json(404, todo: { id: 'not found' })
+    end
   end
 
   def uncomplete
