@@ -1,5 +1,5 @@
 class Todo
-  class FindService
+  class Find
     def call(user_id:, id:)
       todo = Todo.find_by(user_id:, id:)
       status = todo.present? ? :ok : :not_found

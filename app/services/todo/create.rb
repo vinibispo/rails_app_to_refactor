@@ -1,5 +1,5 @@
 class Todo
-  class CreateService
+  class Create
     def call(todo_attributes:)
       todo = Todo.create(todo_attributes)
 

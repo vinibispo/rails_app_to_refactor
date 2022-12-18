@@ -1,5 +1,5 @@
 class Todo
-  class FilterItemsService
+  class FilterItems
     def call(user_id:, status:)
       todos = case status
               in 'overdue' then Todo.overdue

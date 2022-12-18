@@ -1,7 +1,7 @@
 class Todo
-  class UncompleteService
+  class Uncomplete
     def call(conditions:)
-      status, todo = FindService.new.call(**conditions)
+      status, todo = Find.new.call(**conditions)
       case status
       in :ok
         todo.uncomplete!

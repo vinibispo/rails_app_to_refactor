@@ -1,7 +1,7 @@
 class Todo
-  class UpdateService
+  class Update
     def call(conditions:, attributes:)
-      status, todo = FindService.new.call(**conditions)
+      status, todo = Find.new.call(**conditions)
       case status
       in :ok
         return [:ok, todo] if todo.update(attributes)
