@@ -7,7 +7,7 @@ class Users::RegistrationsController < ApplicationController
     user_attributes = { name: user_params[:name], email: user_params[:email], password: user_params[:password],
                         password_confirmation: user_params[:password_confirmation] }
 
-    status, user = ::User::Register.new.call(user_attributes:)
+    status, user = ::User::RegisterAndSendWelcomeEmail.new.call(user_attributes:)
 
     case [status, user]
     in [:password_err, _] | [:confirmation_err, _] then render_json(422, user:)

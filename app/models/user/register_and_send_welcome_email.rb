@@ -1,5 +1,5 @@
 module User
-  class Register
+  class RegisterAndSendWelcomeEmail
     def call(user_attributes:)
       password = user_attributes[:password].to_s.strip
       password_confirmation = user_attributes[:password_confirmation].to_s.strip
@@ -22,7 +22,10 @@ module User
         password_digest:
       )
 
-      return [:ok, user] if user.save
+      if user.save
+        UserMailer.with(user:).welcome.deliver_later
+        return [:ok, user] if user.save
+      end
 
       [:error, user]
     end
