@@ -1,7 +1,7 @@
-class Todo
+module Todo
   class Create
     def call(todo_attributes:)
-      todo = Todo.create(todo_attributes)
+      todo = Record.create(todo_attributes)
 
       status = todo.persisted? ? :ok : :error
 

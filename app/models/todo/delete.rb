@@ -1,4 +1,4 @@
-class Todo
+module Todo
   class Delete
     def call(user_id:, id:)
       status, todo = Find.new.call(user_id:, id:)

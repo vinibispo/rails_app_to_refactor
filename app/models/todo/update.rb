@@ -1,4 +1,4 @@
-class Todo
+module Todo
   class Update
     def call(conditions:, attributes:)
       status, todo = Find.new.call(**conditions)

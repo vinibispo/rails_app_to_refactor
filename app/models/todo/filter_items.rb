@@ -1,11 +1,11 @@
-class Todo
+module Todo
   class FilterItems
     def call(user_id:, status:)
       todos = case status
-              in 'overdue' then Todo.overdue
-              in 'completed' then Todo.completed
-              in 'uncompleted' then Todo.uncompleted
-              else Todo.all
+              in 'overdue' then Record.overdue
+              in 'completed' then Record.completed
+              in 'uncompleted' then Record.uncompleted
+              else Record.all
               end
 
       todos.where(user_id:)

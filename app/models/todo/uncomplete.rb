@@ -1,4 +1,4 @@
-class Todo
+module Todo
   class Uncomplete
     def call(conditions:)
       status, todo = Find.new.call(**conditions)
