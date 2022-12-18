@@ -13,7 +13,7 @@ class ApplicationController < ActionController::API
 
   def current_user
     @current_user ||= authenticate_with_http_token do |token|
-      User::Record.find_by(token:)
+      User::AuthenticateByToken.new.call(token:)
     end
   end
 
