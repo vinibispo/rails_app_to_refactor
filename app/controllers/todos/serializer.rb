@@ -1,4 +1,4 @@
-class Todo::Serializer
+class Todos::Serializer
   private attr_accessor :todo
   def initialize(todo)
     self.todo = todo

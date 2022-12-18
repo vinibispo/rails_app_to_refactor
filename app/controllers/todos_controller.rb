@@ -3,7 +3,7 @@
 class TodosController < ApplicationController
   before_action :authenticate_user
 
-  BuildItem = ->(item) { ::Todo::Serializer.new(item).as_json }
+  BuildItem = ->(item) { ::Todos::Serializer.new(item).as_json }
   private_constant :BuildItem
 
   def index
