@@ -2,10 +2,9 @@
 
 module Todo
   class Record < ApplicationRecord
-
     self.table_name = 'todos'
 
-    belongs_to :user, class_name: "::User"
+    belongs_to :user, class_name: '::User::Record'
 
     scope :overdue, -> { uncompleted.where('due_at <= ?', Time.current) }
     scope :completed, -> { where.not(completed_at: nil) }
@@ -43,7 +42,7 @@ module Todo
     def complete!
       complete
 
-      self.save if completed_at_changed?
+      save if completed_at_changed?
     end
 
     def uncomplete
@@ -53,7 +52,7 @@ module Todo
     def uncomplete!
       uncomplete
 
-      self.save if completed_at_changed?
+      save if completed_at_changed?
     end
   end
 end

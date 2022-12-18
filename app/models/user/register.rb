@@ -1,4 +1,4 @@
-class User
+module User
   class Register
     def call(user_attributes:)
       password = user_attributes[:password].to_s.strip
@@ -15,7 +15,7 @@ class User
       end
 
       password_digest = Digest::SHA256.hexdigest(password)
-      user = User.new(
+      user = User::Record.new(
         name: user_attributes[:name],
         email: user_attributes[:email],
         token: SecureRandom.uuid,

@@ -62,7 +62,7 @@ class Users::RegistrationsControllerCreateTest < ActionDispatch::IntegrationTest
       password_confirmation: '123' } }
 
     # == Act ==
-    assert_difference 'User.count', +1 do
+    assert_difference 'User::Record.count', +1 do
       assert_enqueued_emails 1 do
         post(users_registrations_url, params: user_params)
       end
@@ -75,7 +75,7 @@ class Users::RegistrationsControllerCreateTest < ActionDispatch::IntegrationTest
 
     user_id = json.dig("user", "id")
 
-    relation = User.where(id: user_id)
+    relation = User::Record.where(id: user_id)
 
     # FACT: A user will be persisted.
     assert_predicate(relation, :exists?)

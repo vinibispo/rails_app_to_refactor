@@ -11,8 +11,8 @@ class Users::RegistrationsController < ApplicationController
 
     case [status, user]
     in [:password_err, _] | [:confirmation_err, _] then render_json(422, user:)
-    in [:error, User] then render_json(422, user: user_serializer(user))
-    in [:ok, User] then render_json(201, user: user_serializer(user))
+    in [:error, _] then render_json(422, user: user_serializer(user))
+    in [:ok, _] then render_json(201, user: user_serializer(user))
     end
   end
 
