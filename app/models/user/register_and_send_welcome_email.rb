@@ -23,7 +23,7 @@ module User
       )
 
       if user.save
-        UserMailer.with(user:).welcome.deliver_later
+        Mailer.with(user:).welcome.deliver_later
         return [:ok, user] if user.save
       end
 
