@@ -1,5 +1,5 @@
 module Todo
-  class List::Create
+  class List::AddItem
     def call(todo_attributes:)
       todo = Item::Record.create(todo_attributes)
 
