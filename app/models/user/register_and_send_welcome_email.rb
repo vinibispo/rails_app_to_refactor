@@ -1,12 +1,12 @@
 module User
   class RegisterAndSendWelcomeEmail
     def call(user_attributes:)
-      password = user_attributes[:password].to_s.strip
-      password_confirmation = user_attributes[:password_confirmation].to_s.strip
+      password = Password.new(user_attributes[:password])
+      password_confirmation = Password.new(user_attributes[:password_confirmation])
 
       errors = {}
-      errors[:password] = ["can't be blank"] if password.blank?
-      errors[:password_confirmation] = ["can't be blank"] if password_confirmation.blank?
+      errors[:password] = ["can't be blank"] if password.invalid?
+      errors[:password_confirmation] = ["can't be blank"] if password_confirmation.invalid?
 
       return [:password_err, errors] if errors.present?
 
@@ -14,7 +14,7 @@ module User
         return [:confirmation_err, { password_confirmation: ["doesn't match password"] }]
       end
 
-      password_digest = Digest::SHA256.hexdigest(password)
+      password_digest = Digest::SHA256.hexdigest(password.value)
       user = User::Record.new(
         name: user_attributes[:name],
         email: user_attributes[:email],
