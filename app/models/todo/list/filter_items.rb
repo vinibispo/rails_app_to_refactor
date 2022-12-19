@@ -1,5 +1,5 @@
 module Todo
-  class FilterItems
+  class List::FilterItems
     def call(user_id:, status:)
       todos = case status
               in 'overdue' then Record.overdue

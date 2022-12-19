@@ -8,7 +8,7 @@ module Todos
     private_constant :BuildItem
 
     def index
-      todos = ::Todo::FilterItems.new.call(user_id: current_user.id, status: params[:status]&.strip&.downcase)
+      todos = ::Todo::List::FilterItems.new.call(user_id: current_user.id, status: params[:status]&.strip&.downcase)
 
       render_json(200, todos: todos.map(&BuildItem))
     end
@@ -19,7 +19,7 @@ module Todos
         title: todo_params[:title],
         due_at: todo_params[:due_at]
       }
-      status, todo = ::Todo::Create.new.call(todo_attributes:)
+      status, todo = ::Todo::List::Create.new.call(todo_attributes:)
 
       case [status, todo]
       in [:ok, _] then render_json(201, todo: BuildItem[todo])
