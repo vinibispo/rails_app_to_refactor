@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 module Todos
-  class ItemController < ApplicationController
-    before_action :authenticate_user
+  class ItemController < BaseController
 
     BuildItem = ->(item) { Serializer.new(item).as_json }
     private_constant :BuildItem
@@ -64,32 +63,6 @@ module Todos
       end
     rescue ActionController::ParameterMissing => e
       render_json(400, error: e.message)
-    end
-
-    def complete
-      conditions = {
-        id: params[:id],
-        user_id: current_user.id
-      }
-
-      status, todo = ::Todo::Item::Complete.new.call(conditions:)
-      case status
-      in :ok then render_json(200, todo: BuildItem[todo])
-      else render_json(404, todo: { id: 'not found' })
-      end
-    end
-
-    def uncomplete
-      conditions = {
-        id: params[:id],
-        user_id: current_user.id
-      }
-
-      status, todo = ::Todo::Item::Uncomplete.new.call(conditions:)
-      case status
-      in :ok then render_json(200, todo: BuildItem[todo])
-      else render_json(404, todo: { id: 'not found' })
-      end
     end
 
     private
