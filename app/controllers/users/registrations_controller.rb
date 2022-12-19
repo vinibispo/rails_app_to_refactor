@@ -11,7 +11,7 @@ module Users
       status, user = ::User::RegisterAndSendWelcomeEmail.new.call(user_attributes:)
 
       case [status, user]
-      in [:password_err, _] | [:confirmation_err, _] then render_json(422, user:)
+      in [:password_err, _] then render_json(422, user:)
       in [:error, _] then render_json(422, user: user_serializer(user))
       in [:ok, _] then render_json(201, user: user_serializer(user))
       end
