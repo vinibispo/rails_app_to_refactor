@@ -25,6 +25,8 @@ module Todos
       in [:ok, _] then render_json(201, todo: BuildItem[todo])
       in [:error, _] then render_json(422, todo: BuildItem[todo])
       end
+    rescue ActionController::ParameterMissing => e
+      render_json(400, error: e.message)
     end
 
     def show
@@ -60,6 +62,8 @@ module Todos
       in [:not_found, _] then render_json(404, todo: { id: 'not found' })
       else render_json(422, todo: BuildItem[todo])
       end
+    rescue ActionController::ParameterMissing => e
+      render_json(400, error: e.message)
     end
 
     def complete

@@ -15,6 +15,8 @@ module Users
       in [:error, _] then render_json(422, user: user_serializer(user))
       in [:ok, _] then render_json(201, user: user_serializer(user))
       end
+    rescue ActionController::ParameterMissing => e
+      render_json(400, error: e.message)
     end
 
     private
