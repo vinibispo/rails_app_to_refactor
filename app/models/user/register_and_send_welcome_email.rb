@@ -15,10 +15,13 @@ module User
       return [:attributes_err, errors] if errors.present?
 
       password_digest = password.encrypted
+
+      token = Token.default_value
+
       user = User::Record.create(
         name: name.value,
         email: email.value,
-        token: SecureRandom.uuid,
+        token:,
         password_digest:
       )
 
