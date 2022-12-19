@@ -18,6 +18,8 @@ module User
       return "can't be blank" if value.blank?
     end
 
+    def encrypted = Digest::SHA256.hexdigest(value)
+
     def valid? = value.present?
 
     def invalid?(...) = !valid?(...)

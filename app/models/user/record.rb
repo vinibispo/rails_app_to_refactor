@@ -5,8 +5,7 @@ module User
     self.table_name = 'users'
     has_many :todos, class_name: '::Todo::Record'
 
-    validates :name, presence: true
-    validates :email, presence: true, format: URI::MailTo::EMAIL_REGEXP, uniqueness: true
+    validates :email, uniqueness: true
     validates :token, presence: true, length: { is: 36 }, uniqueness: true
     validates :password_digest, presence: true, length: { is: 64 }
   end

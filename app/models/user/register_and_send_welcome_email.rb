@@ -3,31 +3,28 @@ module User
     def call(user_attributes:)
       password = Password.new(user_attributes[:password])
       password_confirmation = Password.new(user_attributes[:password_confirmation])
+      email = Email.new(user_attributes[:email])
+      name = Name.new(user_attributes[:name])
 
-      errors = {}
-      errors[:password] = ["can't be blank"] if password.invalid?
-      errors[:password_confirmation] = ["can't be blank"] if password_confirmation.invalid?
+      errors = Password::ValidateWithConfirmation.call(password, password_confirmation)
 
-      return [:password_err, errors] if errors.present?
+      errors[:email] = email.validation_error if email.invalid?
 
-      if password != password_confirmation
-        return [:confirmation_err, { password_confirmation: ["doesn't match password"] }]
-      end
+      errors[:name] = name.validation_error if name.invalid?
 
-      password_digest = Digest::SHA256.hexdigest(password.value)
-      user = User::Record.new(
-        name: user_attributes[:name],
-        email: user_attributes[:email],
+      return [:attributes_err, errors] if errors.present?
+
+      password_digest = password.encrypted
+      user = User::Record.create(
+        name: name.value,
+        email: email.value,
         token: SecureRandom.uuid,
         password_digest:
       )
 
-      if user.save
-        Mailer.with(user:).welcome.deliver_later
-        return [:ok, user] if user.save
-      end
-
-      [:error, user]
+      
+      Mailer.with(user:).welcome.deliver_later
+      return [:ok, user]
     end
   end
 end
