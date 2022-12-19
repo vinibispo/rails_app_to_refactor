@@ -50,7 +50,7 @@ class TodosControllerCreateTest < ActionDispatch::IntegrationTest
 
     json = JSON.parse(response.body)
 
-    relation = Todo::Record.where(id: json.dig('todo', 'id'))
+    relation = Todo::Item::Record.where(id: json.dig('todo', 'id'))
 
     assert_predicate(relation, :exists?)
 

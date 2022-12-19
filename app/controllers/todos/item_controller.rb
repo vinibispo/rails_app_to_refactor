@@ -30,7 +30,7 @@ module Todos
     end
 
     def show
-      status, todo = ::Todo::Find.new.call(user_id: current_user.id, id: params[:id])
+      status, todo = ::Todo::Item::Find.new.call(user_id: current_user.id, id: params[:id])
       case [status, todo]
       in [:ok, _] then render_json(200, todo: BuildItem[todo])
       else render_json(404, todo: { id: 'not found' })
@@ -38,7 +38,7 @@ module Todos
     end
 
     def destroy
-      status, todo = ::Todo::Delete.new.call(user_id: current_user.id, id: params[:id])
+      status, todo = ::Todo::Item::Delete.new.call(user_id: current_user.id, id: params[:id])
 
       case [status, todo]
       in [:ok, _] then render_json(200, todo: BuildItem[todo])
@@ -55,7 +55,7 @@ module Todos
       attributes = {
         title: todo_params[:title]
       }
-      status, todo = ::Todo::Update.new.call(conditions:, attributes:)
+      status, todo = ::Todo::Item::Update.new.call(conditions:, attributes:)
 
       case [status, todo]
       in [:ok, _] then render_json(200, todo: BuildItem[todo])
@@ -72,7 +72,7 @@ module Todos
         user_id: current_user.id
       }
 
-      status, todo = ::Todo::Complete.new.call(conditions:)
+      status, todo = ::Todo::Item::Complete.new.call(conditions:)
       case status
       in :ok then render_json(200, todo: BuildItem[todo])
       else render_json(404, todo: { id: 'not found' })
@@ -85,7 +85,7 @@ module Todos
         user_id: current_user.id
       }
 
-      status, todo = ::Todo::Uncomplete.new.call(conditions:)
+      status, todo = ::Todo::Item::Uncomplete.new.call(conditions:)
       case status
       in :ok then render_json(200, todo: BuildItem[todo])
       else render_json(404, todo: { id: 'not found' })

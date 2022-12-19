@@ -3,7 +3,7 @@
 module User
   class Record < ApplicationRecord
     self.table_name = 'users'
-    has_many :todos, class_name: '::Todo::Record'
+    has_many :todos, class_name: '::Todo::Item::Record'
 
     validates :email, uniqueness: true
     validates :token, uniqueness: true

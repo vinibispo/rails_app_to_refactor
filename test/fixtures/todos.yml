@@ -1,6 +1,6 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 _fixture:
-  model_class: Todo::Record
+  model_class: Todo::Item::Record
 
 uncompleted:
   title: Buy milk

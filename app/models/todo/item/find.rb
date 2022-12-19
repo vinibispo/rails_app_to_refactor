@@ -1,4 +1,4 @@
-module Todo
+module Todo::Item
   class Find
     def call(user_id:, id:)
       todo = Record.find_by(user_id:, id:)

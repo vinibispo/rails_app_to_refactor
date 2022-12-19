@@ -25,7 +25,7 @@ class TodosControllerDestroyTest < ActionDispatch::IntegrationTest
   test 'should respond with 200 after deletes an existing todo' do
     todo = todos(:uncompleted)
 
-    assert_difference 'Todo::Record.count', -1 do
+    assert_difference 'Todo::Item::Record.count', -1 do
       delete todo_url(todo), headers: { 'Authorization' => "Bearer token=\"#{todo.user.token}\"" }
     end
 

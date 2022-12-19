@@ -65,7 +65,7 @@ class TodosControllerUpdateTest < ActionDispatch::IntegrationTest
     assert_response 200
 
     json = JSON.parse(response.body)
-    todo = Todo::Record.find(json.dig('todo', 'id'))
+    todo = Todo::Item::Record.find(json.dig('todo', 'id'))
 
     refute_equal(previous_title, todo.title)
     assert_equal('Buy coffee', todo.title)

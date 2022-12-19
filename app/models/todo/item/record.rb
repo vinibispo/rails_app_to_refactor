@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Todo
+module Todo::Item
   class Record < ApplicationRecord
     self.table_name = 'todos'
 
