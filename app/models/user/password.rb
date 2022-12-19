@@ -14,6 +14,10 @@ module User
       value <=> other
     end
 
+    def validation_error
+      return "can't be blank" if value.blank?
+    end
+
     def valid? = value.present?
 
     def invalid?(...) = !valid?(...)
