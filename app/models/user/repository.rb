@@ -13,6 +13,10 @@ module User
       ).then(&AsReadonly)
     end
 
+    def find_user_by_token(token)
+      find_user_by(token: token.value)
+    end
+
     private
 
     def find_user_by(conditions)

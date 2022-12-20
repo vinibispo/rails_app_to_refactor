@@ -11,7 +11,7 @@ class ApplicationController < ActionController::API
 
   def current_user
     @current_user ||= authenticate_with_http_token do |token|
-      User::AuthenticateByToken.new.call(token:)
+      User::AuthenticateByToken.new(repository: User::Repository).call(token:)
     end
   end
 
