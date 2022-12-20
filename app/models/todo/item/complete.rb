@@ -4,7 +4,7 @@ module Todo::Item
       status, todo = Find.new.call(**conditions)
       case status
       in :ok
-        todo.complete!
+        todo.update(completed_at: Time.current) unless todo.completed?
         [status, todo]
       else
         [status, todo]
