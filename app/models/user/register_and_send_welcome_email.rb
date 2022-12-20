@@ -1,7 +1,7 @@
 module User
   class RegisterAndSendWelcomeEmail
     private attr_accessor :repository
-    def initialize(repository: Repository)
+    def initialize(repository:)
       repository.respond_to?(:create_user) or raise ArgumentError
       self.repository = repository
     end
