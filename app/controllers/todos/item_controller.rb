@@ -22,6 +22,7 @@ module Todos
       case [status, todo]
       in [:ok, _] then render_json(201, todo: BuildItem[todo])
       in [:error, _] then render_json(422, todo: BuildItem[todo])
+      in [:attributes_err, _] then render_json(422, todo:)
       end
     rescue ActionController::ParameterMissing => e
       render_json(400, error: e.message)
