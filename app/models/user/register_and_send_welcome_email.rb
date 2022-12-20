@@ -1,5 +1,10 @@
 module User
   class RegisterAndSendWelcomeEmail
+    private attr_accessor :repository
+    def initialize(repository: Repository)
+      self.repository = repository
+    end
+
     def call(user_attributes:)
       password = Password.new(user_attributes[:password])
       password_confirmation = Password.new(user_attributes[:password_confirmation])
@@ -14,20 +19,17 @@ module User
 
       return [:attributes_err, errors] if errors.present?
 
-      password_digest = password.encrypted
-
       token = Token.default_value
 
-      user = User::Record.create(
-        name: name.value,
-        email: email.value,
+      user = repository.create_user(
+        name:,
+        email:,
         token:,
-        password_digest:
+        password:
       )
 
-      
       Mailer.with(user:).welcome.deliver_later
-      return [:ok, user]
+      [:ok, user]
     end
   end
 end

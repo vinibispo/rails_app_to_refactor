@@ -16,7 +16,7 @@ module User
     def invalid?(...) = !valid?(...)
 
     def self.default_value
-      SecureRandom.uuid
+      new(SecureRandom.uuid)
     end
   end
 end
