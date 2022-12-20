@@ -8,7 +8,7 @@ module Users
       user_attributes = { name: user_params[:name], email: user_params[:email], password: user_params[:password],
                           password_confirmation: user_params[:password_confirmation] }
 
-      status, user = ::User::RegisterAndSendWelcomeEmail.new(repository: ::User::Repository).call(user_attributes:)
+      status, user = ::User::RegisterAndSendWelcomeEmail[repository: ::User::Repository].call(user_attributes:)
 
       case [status, user]
       in [:attributes_err, _] then render_json(422, user:)

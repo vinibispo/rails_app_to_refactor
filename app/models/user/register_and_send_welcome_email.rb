@@ -32,5 +32,7 @@ module User
       Mailer.with(user:).welcome.deliver_later
       [:ok, user]
     end
+
+    singleton_class.public_send(:alias_method, :[], :new)
   end
 end

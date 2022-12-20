@@ -15,5 +15,7 @@ module User
 
       Record.find_by(token: user_token.value)
     end
+
+    singleton_class.public_send(:alias_method, :[], :new)
   end
 end
