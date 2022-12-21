@@ -17,7 +17,7 @@ module Todos
         title: todo_params[:title],
         due_at: todo_params[:due_at]
       }
-      status, todo = ::Todo::List::AddItem.new.call(todo_attributes:)
+      status, todo = ::Todo::List::AddItem[].call(todo_attributes:)
 
       case [status, todo]
       in [:ok, _] then render_json(201, todo: BuildItem[todo])
