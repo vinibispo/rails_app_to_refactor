@@ -6,7 +6,7 @@ module Todos
     private_constant :BuildItem
 
     def index
-      todos = ::Todo::List::FilterItems.new.call(user_id: current_user.id, status: params[:status]&.strip&.downcase)
+      todos = ::Todo::List::FilterItems[].call(user_id: current_user.id, status: params[:status]&.strip&.downcase)
 
       render_json(200, todos: todos.map(&BuildItem))
     end
