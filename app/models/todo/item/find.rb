@@ -1,12 +1,18 @@
 module Todo::Item
   class Find
+    private attr_accessor :repository
+    def initialize(repository: Repository)
+      repository.respond_to?(:find_item) or fail ArgumentError
+      self.repository = repository
+    end
+
     def call(user_id:, id:)
-      id = ID.new(id)
-      user_id = ID.new(user_id)
+      id = ::ID.new(id)
+      user_id = ::ID.new(user_id)
 
       return [:not_found, nil] if id.invalid? || user_id.invalid?
 
-      todo = Record.find_by(user_id: user_id.value, id: id.value)
+      todo = repository.find_item(user_id:, id:)
       status = todo.present? ? :ok : :not_found
       [status, todo]
     end
