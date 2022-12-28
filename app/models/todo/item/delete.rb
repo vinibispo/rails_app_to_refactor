@@ -1,5 +1,5 @@
 module Todo::Item
-  class Delete
+  class Delete < ::Command
     private attr_accessor :repository
     def initialize(repository: Repository)
       repository.respond_to?(:remove_item) or fail ArgumentError
@@ -14,6 +14,5 @@ module Todo::Item
       return [:ok, todo] if todo.present?
       [:not_found, nil]
     end
-    singleton_class.public_send(:alias_method, :[], :new)
   end
 end

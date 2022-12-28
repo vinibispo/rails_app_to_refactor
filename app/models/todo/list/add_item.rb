@@ -1,5 +1,5 @@
 module Todo
-  class List::AddItem
+  class List::AddItem < ::Command
     private attr_accessor :repository
     def initialize(repository: List::Repository)
       repository.respond_to?(:add_item) or raise ArgumentError
@@ -24,7 +24,5 @@ module Todo
 
       [status, todo]
     end
-
-    singleton_class.public_send(:alias_method, :[], :new)
   end
 end

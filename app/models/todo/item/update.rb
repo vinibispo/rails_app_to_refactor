@@ -1,14 +1,14 @@
 module Todo::Item
-  class Update
+  class Update < ::Command
     private attr_accessor :repository
-    
+
     def initialize(repository: Repository)
-      repository.respond_to?(:update_title) or fail ArgumentError
+      repository.respond_to?(:update_title) or raise ArgumentError
       self.repository = repository
     end
 
     def call(conditions:, attributes:)
-      conditions = { user_id: ID.new(conditions[:user_id]), id: ID.new(conditions[:id])}
+      conditions = { user_id: ID.new(conditions[:user_id]), id: ID.new(conditions[:id]) }
 
       return [:not_found, nil] if conditions.any? { |(_, value)| value.invalid? }
 
@@ -24,6 +24,5 @@ module Todo::Item
 
       [:ok, todo]
     end
-    singleton_class.public_send(:alias_method, :[], :new)
   end
 end

@@ -1,5 +1,5 @@
 module User
-  class AuthenticateByToken
+  class AuthenticateByToken < ::Command
     private attr_accessor :repository
     def initialize(repository:)
       repository.respond_to?(:find_user_by_token) or raise ArgumentError
@@ -15,7 +15,5 @@ module User
 
       Record.find_by(token: user_token.value)
     end
-
-    singleton_class.public_send(:alias_method, :[], :new)
   end
 end

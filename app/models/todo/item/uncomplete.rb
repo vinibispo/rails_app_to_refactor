@@ -1,5 +1,5 @@
 module Todo::Item
-  class Uncomplete
+  class Uncomplete < ::Command
     private attr_accessor :repository
     def initialize(repository: Repository)
       repository.respond_to?(:uncomplete_item) or raise ArgumentError
@@ -16,6 +16,5 @@ module Todo::Item
 
       [:not_found, nil]
     end
-    singleton_class.public_send(:alias_method, :[], :new)
   end
 end

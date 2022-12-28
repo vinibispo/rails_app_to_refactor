@@ -1,5 +1,5 @@
 module User
-  class RegisterAndSendWelcomeEmail
+  class RegisterAndSendWelcomeEmail < ::Command
     private attr_accessor :repository
     def initialize(repository:)
       repository.respond_to?(:create_user) or raise ArgumentError
@@ -32,7 +32,5 @@ module User
       Mailer.with(user:).welcome.deliver_later
       [:ok, user]
     end
-
-    singleton_class.public_send(:alias_method, :[], :new)
   end
 end

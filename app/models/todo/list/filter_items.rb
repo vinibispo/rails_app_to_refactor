@@ -1,5 +1,5 @@
 module Todo
-  class List::FilterItems
+  class List::FilterItems < ::Command
     private attr_accessor :repository
     def initialize(repository: List::Repository)
       repository.respond_to?(:filter_items) or raise ArgumentError
