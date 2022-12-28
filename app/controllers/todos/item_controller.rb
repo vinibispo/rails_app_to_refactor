@@ -37,7 +37,7 @@ module Todos
     end
 
     def destroy
-      status, todo = ::Todo::Item::Delete.new.call(user_id: current_user.id, id: params[:id])
+      status, todo = ::Todo::Item::Delete.new.call(conditions: { user_id: current_user.id, id: params[:id] })
 
       case [status, todo]
       in [:ok, _] then render_json(200, todo: BuildItem[todo])
@@ -59,7 +59,7 @@ module Todos
       case [status, todo]
       in [:ok, _] then render_json(200, todo: BuildItem[todo])
       in [:not_found, _] then render_json(404, todo: { id: 'not found' })
-      else render_json(422, todo: BuildItem[todo])
+      in [:attributes_err, _] then render_json(422, todo:)
       end
     rescue ActionController::ParameterMissing => e
       render_json(400, error: e.message)

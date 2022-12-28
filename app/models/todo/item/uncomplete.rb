@@ -1,14 +1,21 @@
 module Todo::Item
   class Uncomplete
-    def call(conditions:)
-      status, todo = Find.new.call(**conditions)
-      case status
-      in :ok
-        todo.update(completed_at: nil) unless todo.uncompleted?
-        [status, todo]
-      else
-        [status, todo]
-      end
+    private attr_accessor :repository
+    def initialize(repository: Repository)
+      repository.respond_to?(:uncomplete_item) or raise ArgumentError
+      self.repository = repository
     end
+
+    def call(conditions:)
+      conditions = { user_id: ::ID.new(conditions[:user_id]), id: ::ID.new(conditions[:id]) }
+
+      return [:not_found, nil] if conditions.any? { |(_key, value)| value.invalid? }
+
+      todo = repository.uncomplete_item(conditions:)
+      return [:ok, todo] if todo.present?
+
+      [:not_found, nil]
+    end
+    singleton_class.public_send(:alias_method, :[], :new)
   end
 end

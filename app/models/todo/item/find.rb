@@ -2,7 +2,7 @@ module Todo::Item
   class Find
     private attr_accessor :repository
     def initialize(repository: Repository)
-      repository.respond_to?(:find_item) or fail ArgumentError
+      repository.respond_to?(:find_item) or raise ArgumentError
       self.repository = repository
     end
 
@@ -16,5 +16,6 @@ module Todo::Item
       status = todo.present? ? :ok : :not_found
       [status, todo]
     end
+    singleton_class.public_send(:alias_method, :[], :new)
   end
 end
